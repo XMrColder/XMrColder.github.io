@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <title>表单</title>
+</head>
+<body>
+<form class="box my-6 mx-6">
+    <label class="label">昵称</label>
+    <div class="field">
+        <div class="control has-icons-left">
+            <input class="input" placeholder="alex" type="text"/>
+            <span class="icon is-left is-small">
+                <i class="fas fa-user"></i>
+            </span>
+        </div>
+    </div>
+
+    <label class="label">邮箱</label>
+    <div class="field has-addons">
+        <p class="control is-expanded has-icons-left">
+            <input class="input" placeholder="example" type="text">
+            <span class="icon is-left is-small">
+                <i class="fas fa-envelope"></i>
+            </span>
+        </p>
+        <p class="control">
+            <span class="select">
+                <select>
+                    <option>@gmail.com</option>
+                    <option>@outlook.com</option>
+                    <option>@qq.com</option>
+                    <option>@126.com</option>
+                </select>
+            </span>
+        </p>
+    </div>
+
+    <label class="label">密码</label>
+    <div class="field">
+        <div class="control has-icons-left">
+            <input class="input" placeholder="********" type="password"/>
+            <span class="icon is-left is-small">
+                <i class="fas fa-lock"></i>
+            </span>
+        </div>
+    </div>
+
+    <label class="label">性别</label>
+    <div class="control my-2">
+        <label class="radio">
+            <input name="answer" type="radio"/>
+            男
+        </label>
+        <label class="radio mx-2">
+            <input name="answer" type="radio"/>
+            女
+        </label>
+    </div>
+
+    <label class="label">爱好</label>
+    <div class="checkboxes my-2">
+        <label class="checkbox">
+            <input type="checkbox"/>
+            唱歌
+        </label>
+
+        <label class="checkbox">
+            <input type="checkbox"/>
+            跳舞
+        </label>
+
+        <label class="checkbox">
+            <input type="checkbox"/>
+            rap
+        </label>
+
+        <label class="checkbox">
+            <input type="checkbox"/>
+            篮球
+        </label>
+    </div>
+
+    <label class="label">个人简介</label>
+    <textarea class="textarea my-2" placeholder="我的名字是吉良吉影……"></textarea>
+
+    <label class="label">个人照片</label>
+    <div class="file is-boxed">
+        <label class="file-label">
+            <input class="file-input" name="resume" type="file"/>
+            <span class="file-cta">
+      <span class="file-icon">
+        <i class="fas fa-upload"></i>
+      </span>
+      <span class="file-label"> 选择文件 </span>
+    </span>
+        </label>
+    </div>
+
+    <button class="button is-primary">提交</button>
+</form>
+
+</body>
+</html>
