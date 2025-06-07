@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    var data = [{
+        title: "apple",
+        value: 0.24,
+        color: "green"
+    },
+        {
+            title: "三星",
+            value: 0.26,
+            color: "yellow"
+        },
+        {
+            title: "华为",
+            value: 0.13,
+            color: "orange"
+        },
+        {
+            title: "锤子",
+            value: 0.17,
+            color: "red"
+        },
+        {
+            title: "小米",
+            value: 0.08,
+            color: "purple"
+        },
+        {
+            title: "其他",
+            value: 0.12,
+            color: "cyan"
+        }
+    ];
+    var w = 800;
+    var h = 600;
+    var cx = w / 2;
+    var cy = h / 2;
+    var r = 200;
+    var canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    document.body.appendChild(canvas)
+    var ctx = canvas.getContext("2d");
+    ctx.font = "18px Microsoft YaHei";
+    function drawpie(highlightIndex) {
+        ctx.clearRect(0, 0, w, h);
+        var beginAngle = Math.PI / 6;
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var currentR = r;
+            if (i === highlightIndex) {
+                currentR += 20;
+            }
+            var angle = item.value * 2 * Math.PI;
+            var endAngle = beginAngle + angle;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, currentR, beginAngle, endAngle);
+            ctx.fillStyle = item.color;
+            ctx.fill();
+            var txtAngle = beginAngle + angle / 2;
+            if (txtAngle >= Math.PI / 2 && txtAngle < Math.PI * 3 / 2) {
+                ctx.textAlign = "end";
+            } else {
+                ctx.textAlign = "start";
+            }
+            var tx = cx + (currentR + 10) * Math.cos(txtAngle);
+            var ty = cy + (currentR + 10) * Math.sin(txtAngle);
+            ctx.fillStyle = "black";
+            ctx.fillText(item.title + " " + Math.round(item.value * 100) + "%", tx, ty);
+            data[i].beginAngle = beginAngle;
+            data[i].endAngle = endAngle;
+            beginAngle = endAngle;
+        }
+    }
+
+    let lastHighlightIndex = -1;
+    drawpie(lastHighlightIndex);
+    canvas.onmousemove = function(e) {
+        let box = canvas.getBoundingClientRect();
+        let x = e.clientX - box.left;
+        let y = e.clientY - box.top;
+        let dx = x - cx;
+        let dy = y - cy;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance <= r + 20) {
+            let angle = Math.atan2(dy, dx);
+            if (angle < 0) {
+                angle += 2 * Math.PI;
+            }
+            let adjustedAngle = angle - Math.PI / 6;
+            if (adjustedAngle < 0) {
+                adjustedAngle += 2 * Math.PI;
+            }
+            let currentHighlightIndex = -1;
+            for (let i = 0; i < data.length; i++) {
+                let beginAngle = data[i].beginAngle - Math.PI / 6;
+                let endAngle = data[i].endAngle - Math.PI / 6;
+
+                if (beginAngle < 0) beginAngle += 2 * Math.PI;
+                if (endAngle < 0) endAngle += 2 * Math.PI;
+
+                if (beginAngle > endAngle) {
+                    // 跨越0度的情况
+                    if (adjustedAngle >= beginAngle || adjustedAngle <= endAngle) {
+                        currentHighlightIndex = i;
+                        break;
+                    }
+                } else {
+                    if (adjustedAngle >= beginAngle && adjustedAngle <= endAngle) {
+                        currentHighlightIndex = i;
+                        break;
+                    }
+                }
+            }
+            if (currentHighlightIndex !== lastHighlightIndex) {
+                drawpie(currentHighlightIndex);
+                lastHighlightIndex = currentHighlightIndex;
+            }
+        } else {
+            if (lastHighlightIndex !== -1) {
+                drawpie(-1);
+                lastHighlightIndex = -1;
+            }
+        }
+    };
+
+    // 鼠标离开canvas时取消高亮
+    canvas.onmouseleave = function() {
+        if (lastHighlightIndex !== -1) {
+            drawpie(-1);
+            lastHighlightIndex = -1;
+        }
+    };
+</script>
+
+</html>

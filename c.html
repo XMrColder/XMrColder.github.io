@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>轮播图优化</title>
+    <style>
+        #container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            border: 3px solid #333;
+            overflow: hidden;
+        }
+
+        #list {
+            position: absolute;
+            z-index: 1;
+            width: 2400px;
+            height: 400px;
+            left: 0px;
+            transition: left 0.5s ease;
+        }
+
+        #list img {
+            float: left;
+            width: 600px;
+            height: 400px;
+        }
+
+        #buttons {
+            position: absolute;
+            left: 250px;
+            bottom: 20px;
+            z-index: 2;
+            height: 10px;
+            width: 100px;
+        }
+
+        #buttons span {
+            float: left;
+            margin-right: 5px;
+            width: 10px;
+            height: 10px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            background: #333;
+            cursor: pointer;
+        }
+
+        #buttons .on {
+            background: orangered;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 180px;
+            z-index: 2;
+            display: none;
+            width: 40px;
+            height: 40px;
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 39px;
+            text-align: center;
+            color: #fff;
+            background-color: RGBA(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .arrow:hover {
+            background-color: RGBA(0, 0, 0, 0.7);
+        }
+
+        #container:hover .arrow {
+            display: block;
+        }
+
+        #prev {
+            left: 20px;
+            text-decoration: none;
+        }
+
+        #next {
+            right: 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="list">
+        <img alt="轮播图1" src="img/1.jpg">
+        <img alt="轮播图2" src="img/2.jpg">
+        <img alt="轮播图3" src="img/3.jpg">
+        <img alt="轮播图4" src="img/4.jpg">
+    </div>
+    <div id="buttons">
+        <span class="on" index="0"></span>
+        <span index="1"></span>
+        <span index="2"></span>
+        <span index="3"></span>
+    </div>
+    <a class="arrow" href="javascript:" id="prev">&lt;</a>
+    <a class="arrow" href="javascript:" id="next">&gt;</a>
+</div>
+<script>
+    const width = 600;
+    const list = document.getElementById("list");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const buttons = document.querySelectorAll("#buttons span");
+    const num = list.children.length;
+    let currentIndex = 0;
+    let timer;
+
+    function updateButtons() {
+        buttons.forEach((btn, index) => {
+            btn.className = index === currentIndex ? "on" : "";
+        });
+    }
+
+    function animate(offset) {
+        const newLeft = parseInt(list.style.left || 0) - offset * width;
+        const maxLeft = -(num - 1) * width;
+        if (newLeft > 0) {
+            list.style.left = maxLeft + "px";
+            currentIndex = num - 1;
+        } else if (newLeft < maxLeft) {
+            list.style.left = "0px";
+            currentIndex = 0;
+        } else {
+            list.style.left = newLeft + "px";
+            currentIndex = Math.abs(Math.round(newLeft / width));
+        }
+        updateButtons();
+    }
+
+    function goToIndex(index) {
+        currentIndex = index;
+        list.style.left = -currentIndex * width + "px";
+        updateButtons();
+    }
+
+    function startAutoPlay() {
+        timer = setInterval(() => animate(1), 3000);
+    }
+
+    function initEvents() {
+        prev.addEventListener("click", () => animate(-1));
+        next.addEventListener("click", () => animate(1));
+
+        buttons.forEach((btn, index) => {
+            btn.addEventListener("click", () => goToIndex(index));
+        });
+
+        const container = document.getElementById("container");
+        container.addEventListener("mouseenter", () => clearInterval(timer));
+        container.addEventListener("mouseleave", startAutoPlay);
+    }
+
+    window.onload = () => {
+        initEvents();
+        startAutoPlay();
+        updateButtons(); // 初始按钮状态
+    };
+</script>
+</body>
+</html>
